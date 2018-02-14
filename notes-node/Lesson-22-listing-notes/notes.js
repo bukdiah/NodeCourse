@@ -1,5 +1,5 @@
 //Where Reading and Writing funcitons will be stored
-console.log('Starting notes.js');
+//console.log('Starting notes.js');
 
 const fs = require('fs');
 
@@ -41,6 +41,7 @@ var addNote = (title, body) => {
 
 var getAll = () => {
     console.log('Getting all notes');
+    return fetchNotes();
 };
 
 var getNote = (title) => {
@@ -80,11 +81,21 @@ var removeNote = (title) => {
     return notes.length !== filteredNotes.length;
 };
 
+var logNote = (note) => {
+    //break on this line and use repl to output note
+    debugger;
+    //use read command with --title
+    console.log('--');
+    console.log(`Title:  ${note.title}`);
+    console.log(`Body:  ${note.body}`);
+};
+
 //Exporting the addNote function
 module.exports = {
     //addNote: addNote if the key and value the same, can do the bottom syntax
     addNote,
     getAll,
     getNote,
-    removeNote
+    removeNote,
+    logNote
 };

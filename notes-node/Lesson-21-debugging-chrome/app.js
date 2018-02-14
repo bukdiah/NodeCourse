@@ -24,9 +24,11 @@ if (command === 'add') {
 
     if (note) {
         console.log("Note created");
+        notes.logNote(note);
+        /*
         console.log('--');
         console.log(`Title:  ${note.title}`);
-        console.log(`Body:  ${note.body}`);
+        console.log(`Body:  ${note.body}`);*/
     } else {
         console.log("Note title already in use");
     }
@@ -39,9 +41,7 @@ if (command === 'add') {
 
     if (note) {
         console.log("Note read");
-        console.log('--');
-        console.log(`Title:  ${note.title}`);
-        console.log(`Body:  ${note.body}`);
+        notes.logNote(note);
     } else {
         console.log("Note not found");
     }

@@ -1,5 +1,4 @@
 //Where your app starts
-console.log("Starting app.");
 
 //Import FileSystem module and store in const fs
 const fs = require('fs');
@@ -9,14 +8,34 @@ const yargs = require("yargs");
 //Loading our custom notes module (relative path)
 const notes = require('./notes.js');
 
-const argv = yargs.argv;
-//get CLI arguments passed in
-//var command = process.argv[2];
+const titleOptions = {
+    describe: "Title of note",
+    demand: true, //add command requires title
+    alias: 't'
+}
+
+const bodyOptions = {
+        describe: "Body of the note",
+        demand: true, //add command requires title
+        alias: 'b'
+}
+
+const argv = yargs.command('add', 'Add a new note', {
+    title: titleOptions,
+    body: bodyOptions
+
+})
+.command('list', 'List all the notes')
+.command('read', 'Read a note', {
+    title: titleOptions
+})
+.command('remove', 'Remove a note', {
+    title: titleOptions
+})
+.help()
+.argv;
 
 var command = argv._[0];
-console.log('Command: ', command);
-console.log('Process', process.argv);
-console.log('Yargs', argv);
 
 if (command === 'add') {
     //console.log('Adding new Note');
@@ -24,24 +43,28 @@ if (command === 'add') {
 
     if (note) {
         console.log("Note created");
-        console.log('--');
-        console.log(`Title:  ${note.title}`);
-        console.log(`Body:  ${note.body}`);
+        notes.logNote(note);
+
     } else {
         console.log("Note title already in use");
     }
 } else if (command === 'list') {
     //console.log('Listing all notes');
-    notes.getAll();
+   var allNotes = notes.getAll();
+   console.log(`Printing ${allNotes.length} note(s).`);
+
+    allNotes.forEach((note) =>{
+        notes.logNote(note);
+    });
+
+
 } else if (command === 'read') {
     //console.log('reading note');
     var note = notes.getNote(argv.title);
 
     if (note) {
         console.log("Note read");
-        console.log('--');
-        console.log(`Title:  ${note.title}`);
-        console.log(`Body:  ${note.body}`);
+        notes.logNote(note);
     } else {
         console.log("Note not found");
     }
