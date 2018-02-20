@@ -1,18 +1,41 @@
 // starting point for weather application
 
-// library for making HTTP requests
-const request = require("request");
+const yargs = require("yargs");
 
-// provide with GET options and callback function
-request({
-    url: "https://maps.googleapis.com/maps/api/geocode/json?address=1301%20lombard%20street%20philadelphia",
-    json: true //converts JSON to object
-}, (error, response, body) => {
-    //console.log(JSON.stringify(body, undefined, 2));
-    console.log(`Address: ${body.results[0].formatted_address}`);
-    var geometry = body.results[0].geometry;
-    var loc = geometry.location;
-    //console.log(geometry);
-    //console.log(loc)
-    console.log(`Lat: ${loc.lat} Lng: ${loc.lng}`);
+//Refactored requests and geocode logic to this module
+const geocode = require('./geocode/geocode');
+
+const weather = require('./weather/weather');
+
+//node app.js --address '1301 lombard street'
+const argv = yargs
+    .options({
+        a: {
+            demand: true,
+            alias: 'address',
+            describe: 'Address to fetch weather for',
+            string: true
+        }
+    })
+    .help() //adds help method
+    .alias('help', 'h') //alias for help
+    .argv;
+
+console.log("argv: ", argv)
+geocode.geocodeAddress(argv.address, (errorMessage, results) => {
+    if (errorMessage) {
+        console.log(errorMessage);
+    } else {
+        console.log(results.address);
+
+        // lat, lng, callback
+        weather.getWeather(results.latitude, results.longitude, (errorMessage, weatherResults) => {
+            if (errorMessage) {
+                console.log(errorMessage);
+            } else {
+                console.log(`It's currently ${weatherResults.temperature}. It feels like ${weatherResults.apparentTemp}`);
+            }
+        });
+    }
 });
+
