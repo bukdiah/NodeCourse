@@ -2,6 +2,9 @@ const express = require('express');
 const hbs = require('hbs'); //templating library Handlebars
 const fs = require('fs');
 
+// App can run on Heroku or Locally
+const port = process.env.PORT || 3000;
+
 var app = express();
 
 // add support for HBS partials
@@ -76,6 +79,7 @@ app.get('/bad', (req, res) => {
 });
 
 // Bind the app to a port on your machine
-app.listen(3000, () => {
-    console.log('Server is up on port 3000');
+// Need to make the port dynamic using an ENVIRONMENT variable Heroku sets
+app.listen(port, () => {
+    console.log('Server is up on port ' + port);
 });
